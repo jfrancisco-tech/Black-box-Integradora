@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23504" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Y6W-OH-hqX">
+    <device id="retina6_12" orientation="portrait" appearance="dark"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23506"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <scene sceneID="s0d-6b-0kx">
+            <objects>
+                <viewController storyboardIdentifier="HistorialViewController" id="Y6W-OH-hqX" customClass="HistorialViewController" customModule="Caja_Fuerte_Lock_Box" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="5EZ-qb-Rvc">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Top-Bar">
+                                <rect key="frame" x="20" y="79" width="353" height="60"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="HISTORIAL" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Title-Label">
+                                        <rect key="frame" x="10" y="14.666666666666671" width="138" height="31"/>
+                                        <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="26"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="clock.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="Icon-Clock">
+                                        <rect key="frame" x="313" y="16" width="30" height="28.666666666666671"/>
+                                        <color key="tintColor" systemColor="systemGrayColor"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="30" id="clock-w"/>
+                                            <constraint firstAttribute="height" constant="30" id="clock-h"/>
+                                        </constraints>
+                                    </imageView>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstItem="Title-Label" firstAttribute="leading" secondItem="Top-Bar" secondAttribute="leading" constant="10" id="lead-title"/>
+                                    <constraint firstItem="Title-Label" firstAttribute="centerY" secondItem="Top-Bar" secondAttribute="centerY" id="mid-title"/>
+                                    <constraint firstAttribute="height" constant="60" id="top-h"/>
+                                    <constraint firstAttribute="trailing" secondItem="Icon-Clock" secondAttribute="trailing" constant="10" id="trail-icon"/>
+                                    <constraint firstItem="Icon-Clock" firstAttribute="centerY" secondItem="Top-Bar" secondAttribute="centerY" id="y-icon"/>
+                                </constraints>
+                            </view>
+                            
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="Table-History">
+                                <rect key="frame" x="0.0" y="149" width="393" height="703"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="cell" rowHeight="90" id="Cell-History" customClass="HistorialCell" customModule="Caja_Fuerte_Lock_Box" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="50" width="393" height="90"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Cell-History" id="Content-Cell">
+                                            <rect key="frame" x="0.0" y="0.0" width="393" height="90"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Card-View">
+                                                    <rect key="frame" x="20" y="5" width="353" height="80"/>
+                                                    <subviews>
+                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Icon-Container">
+                                                            <rect key="frame" x="15" y="15" width="50" height="50"/>
+                                                            <subviews>
+                                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" tag="100" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="lock.open.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="Img-Event">
+                                                                    <rect key="frame" x="12.666666666666666" y="13" width="25" height="23.333333333333332"/>
+                                                                    <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                    <constraints>
+                                                                        <constraint firstAttribute="width" constant="25" id="img-w"/>
+                                                                        <constraint firstAttribute="height" constant="25" id="img-h"/>
+                                                                    </constraints>
+                                                                </imageView>
+                                                            </subviews>
+                                                            <color key="backgroundColor" red="0.25" green="0.25" blue="0.26000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                            <constraints>
+                                                                <constraint firstItem="Img-Event" firstAttribute="centerY" secondItem="Icon-Container" secondAttribute="centerY" id="cen-img-y"/>
+                                                                <constraint firstItem="Img-Event" firstAttribute="centerX" secondItem="Icon-Container" secondAttribute="centerX" id="cen-img-x"/>
+                                                                <constraint firstAttribute="height" constant="50" id="con-h"/>
+                                                                <constraint firstAttribute="width" constant="50" id="con-w"/>
+                                                            </constraints>
+                                                            <userDefinedRuntimeAttributes>
+                                                                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                                    <integer key="value" value="15"/>
+                                                                </userDefinedRuntimeAttribute>
+                                                            </userDefinedRuntimeAttributes>
+                                                        </view>
+                                                        
+                                                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="Stack-Text">
+                                                            <rect key="frame" x="80" y="19.333333333333332" width="258" height="41.333333333333343"/>
+                                                            <subviews>
+                                                                <label opaque="NO" userInteractionEnabled="NO" tag="101" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Puerta Abierta" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Lbl-Title">
+                                                                    <rect key="frame" x="0.0" y="0.0" width="258" height="20.333333333333332"/>
+                                                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                    <nil key="highlightedColor"/>
+                                                                </label>
+                                                                <label opaque="NO" userInteractionEnabled="NO" tag="102" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Hoy, 10:30 PM" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Lbl-Date">
+                                                                    <rect key="frame" x="0.0" y="24.333333333333336" width="258" height="17"/>
+                                                                    <fontDescription key="fontDescription" type="system" weight="medium" pointSize="14"/>
+                                                                    <color key="textColor" systemColor="systemGrayColor"/>
+                                                                    <nil key="highlightedColor"/>
+                                                                </label>
+                                                            </subviews>
+                                                        </stackView>
+                                                    </subviews>
+                                                    <color key="backgroundColor" red="0.15686274510000001" green="0.15686274510000001" blue="0.16862745100000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="trailing" secondItem="Stack-Text" secondAttribute="trailing" constant="15" id="end-stack"/>
+                                                        <constraint firstItem="Icon-Container" firstAttribute="centerY" secondItem="Card-View" secondAttribute="centerY" id="mid-icon"/>
+                                                        <constraint firstItem="Stack-Text" firstAttribute="leading" secondItem="Icon-Container" secondAttribute="trailing" constant="15" id="start-stack"/>
+                                                        <constraint firstItem="Icon-Container" firstAttribute="leading" secondItem="Card-View" secondAttribute="leading" constant="15" id="start-view"/>
+                                                        <constraint firstItem="Stack-Text" firstAttribute="centerY" secondItem="Card-View" secondAttribute="centerY" id="vert-stack"/>
+                                                    </constraints>
+                                                    <userDefinedRuntimeAttributes>
+                                                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                            <integer key="value" value="20"/>
+                                                        </userDefinedRuntimeAttribute>
+                                                    </userDefinedRuntimeAttributes>
+                                                </view>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <constraints>
+                                                <constraint firstItem="Card-View" firstAttribute="top" secondItem="Content-Cell" secondAttribute="top" constant="5" id="c-top"/>
+                                                <constraint firstItem="Card-View" firstAttribute="leading" secondItem="Content-Cell" secondAttribute="leading" constant="20" id="c-lead"/>
+                                                <constraint firstAttribute="trailing" secondItem="Card-View" secondAttribute="trailing" constant="20" id="c-trail"/>
+                                                <constraint firstAttribute="bottom" secondItem="Card-View" secondAttribute="bottom" constant="5" id="c-bot"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </tableViewCell>
+                                </prototypes>
+                            </tableView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="vDu-zF-Fre"/>
+                        <color key="backgroundColor" red="0.10980392160000001" green="0.10980392160000001" blue="0.1176470588" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="Top-Bar" firstAttribute="top" secondItem="vDu-zF-Fre" secondAttribute="top" constant="20" id="1"/>
+                            <constraint firstItem="vDu-zF-Fre" firstAttribute="trailing" secondItem="Top-Bar" secondAttribute="trailing" constant="20" id="2"/>
+                            <constraint firstItem="Top-Bar" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" constant="20" id="3"/>
+                            <constraint firstItem="Table-History" firstAttribute="top" secondItem="Top-Bar" secondAttribute="bottom" constant="10" id="4"/>
+                            <constraint firstItem="Table-History" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" id="5"/>
+                            <constraint firstItem="vDu-zF-Fre" firstAttribute="trailing" secondItem="Table-History" secondAttribute="trailing" id="6"/>
+                            <constraint firstAttribute="bottom" secondItem="Table-History" secondAttribute="bottom" id="7"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="tabla" destination="Table-History" id="out-tab"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Ief-a0-LHa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="130.53435114503816" y="-34.507042253521128"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="clock.fill" catalog="system" width="128" height="123"/>
+        <image name="lock.open.fill" catalog="system" width="109" height="128"/>
+        <systemColor name="systemGrayColor">
+            <color red="0.5568627451" green="0.5568627451" blue="0.57647058819999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+    </resources>
+</document>

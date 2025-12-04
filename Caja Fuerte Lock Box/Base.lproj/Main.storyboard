@@ -1,24 +1,506 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13122.16" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23504" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+    <device id="retina4_7" orientation="portrait" appearance="dark"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13104.12"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23506"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="MainDashboard" id="BYZ-38-t0r" customClass="ViewController" customModule="Caja_Fuerte_Lock_Box" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" xcode11CocoaTouchSystemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <subviews>
+                            
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Scroll-Main">
+                                <rect key="frame" x="0.0" y="20" width="375" height="647"/>
+                                <subviews>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Content-View">
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="1000"/>
+                                        <subviews>
+                                            
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Btn-Logout">
+                                                <rect key="frame" x="20" y="10" width="50" height="50"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="50" id="logout-w"/>
+                                                    <constraint firstAttribute="height" constant="50" id="logout-h"/>
+                                                </constraints>
+                                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <state key="normal" title="Button"/>
+                                                <buttonConfiguration key="configuration" style="plain" image="rectangle.portrait.and.arrow.right" catalog="system">
+                                                    <preferredSymbolConfiguration key="preferredSymbolConfigurationForImage" configurationType="pointSize" pointSize="24" scale="medium"/>
+                                                </buttonConfiguration>
+                                                <connections>
+                                                    <action selector="logoutTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="act-logout"/>
+                                                </connections>
+                                            </button>
+
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Header-Card">
+                                                <rect key="frame" x="20" y="70" width="335" height="80"/>
+                                                <subviews>
+                                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="letras_logo" translatesAutoresizingMaskIntoConstraints="NO" id="Img-Shield">
+                                                        <rect key="frame" x="10" y="10" width="315" height="60"/>
+                                                        <color key="tintColor" systemColor="systemGreenColor"/>
+                                                    </imageView>
+                                                </subviews>
+                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <constraints>
+                                                    <constraint firstItem="Img-Shield" firstAttribute="top" secondItem="Header-Card" secondAttribute="top" constant="10" id="1"/>
+                                                    <constraint firstAttribute="trailing" secondItem="Img-Shield" secondAttribute="trailing" constant="10" id="2"/>
+                                                    <constraint firstItem="Img-Shield" firstAttribute="leading" secondItem="Header-Card" secondAttribute="leading" constant="10" id="3"/>
+                                                    <constraint firstAttribute="bottom" secondItem="Img-Shield" secondAttribute="bottom" constant="10" id="4"/>
+                                                    <constraint firstAttribute="height" constant="80" id="H-Head"/>
+                                                </constraints>
+                                            </view>
+
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Servo-Container">
+                                                <rect key="frame" x="67.5" y="170" width="240" height="240"/>
+                                                <subviews>
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Btn-Lock">
+                                                        <rect key="frame" x="20" y="20" width="200" height="200"/>
+                                                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="200" id="Btn-H"/>
+                                                            <constraint firstAttribute="width" constant="200" id="Btn-W"/>
+                                                        </constraints>
+                                                        <state key="normal" title="Button"/>
+                                                        <buttonConfiguration key="configuration" style="plain" image="lock.fill" catalog="system" title=" CERRADO" imagePadding="5">
+                                                            <preferredSymbolConfiguration key="preferredSymbolConfigurationForImage" configurationType="pointSize" pointSize="30"/>
+                                                            <fontDescription key="titleFontDescription" type="boldSystem" pointSize="20"/>
+                                                            <color key="baseForegroundColor" systemColor="systemRedColor"/>
+                                                        </buttonConfiguration>
+                                                        <userDefinedRuntimeAttributes>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                                <integer key="value" value="100"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.borderWidth">
+                                                                <integer key="value" value="4"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                        </userDefinedRuntimeAttributes>
+                                                        <connections>
+                                                            <action selector="lockTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="act-lock"/>
+                                                        </connections>
+                                                    </button>
+                                                </subviews>
+                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <constraints>
+                                                    <constraint firstItem="Btn-Lock" firstAttribute="centerX" secondItem="Servo-Container" secondAttribute="centerX" id="cen-btn-x"/>
+                                                    <constraint firstItem="Btn-Lock" firstAttribute="centerY" secondItem="Servo-Container" secondAttribute="centerY" id="cen-btn-y"/>
+                                                    <constraint firstAttribute="height" constant="240" id="con-h"/>
+                                                    <constraint firstAttribute="width" constant="240" id="con-w"/>
+                                                </constraints>
+                                            </view>
+
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ÚLTIMOS DATOS REGISTRADOS" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Tit-LastData">
+                                                <rect key="frame" x="20" y="440" width="335" height="15"/>
+                                                <fontDescription key="fontDescription" type="boldSystem" pointSize="12"/>
+                                                <color key="textColor" systemColor="systemGrayColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+
+                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="15" translatesAutoresizingMaskIntoConstraints="NO" id="Stack-Sensors">
+                                                <rect key="frame" x="20" y="465" width="335" height="255"/>
+                                                <subviews>
+                                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="15" translatesAutoresizingMaskIntoConstraints="NO" id="Row-1">
+                                                        <rect key="frame" x="0.0" y="0.0" width="335" height="120"/>
+                                                        <subviews>
+                                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Card-Temp">
+                                                                <rect key="frame" x="0.0" y="0.0" width="160" height="120"/>
+                                                                <subviews>
+                                                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" image="thermometer.medium" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="Icon-Temp">
+                                                                        <rect key="frame" x="15" y="14.5" width="20" height="20.5"/>
+                                                                        <color key="tintColor" systemColor="systemOrangeColor"/>
+                                                                        <constraints>
+                                                                            <constraint firstAttribute="height" constant="20" id="t-h"/>
+                                                                            <constraint firstAttribute="width" constant="20" id="t-w"/>
+                                                                        </constraints>
+                                                                    </imageView>
+                                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="TEMP" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Lbl-Temp">
+                                                                        <rect key="frame" x="40" y="18" width="105" height="14.5"/>
+                                                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="12"/>
+                                                                        <color key="textColor" systemColor="systemGrayColor"/>
+                                                                        <nil key="highlightedColor"/>
+                                                                    </label>
+                                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="--°C" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Val-Temp">
+                                                                        <rect key="frame" x="15" y="60" width="130" height="36"/>
+                                                                        <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="30"/>
+                                                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                        <nil key="highlightedColor"/>
+                                                                    </label>
+                                                                </subviews>
+                                                                <color key="backgroundColor" red="0.10980392160000001" green="0.10980392160000001" blue="0.1176470588" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                                <constraints>
+                                                                    <constraint firstItem="Icon-Temp" firstAttribute="leading" secondItem="Card-Temp" secondAttribute="leading" constant="15" id="c1"/>
+                                                                    <constraint firstItem="Icon-Temp" firstAttribute="top" secondItem="Card-Temp" secondAttribute="top" constant="15" id="c2"/>
+                                                                    <constraint firstItem="Lbl-Temp" firstAttribute="centerY" secondItem="Icon-Temp" secondAttribute="centerY" id="c3"/>
+                                                                    <constraint firstItem="Lbl-Temp" firstAttribute="leading" secondItem="Icon-Temp" secondAttribute="trailing" constant="5" id="c4"/>
+                                                                    <constraint firstAttribute="trailing" secondItem="Lbl-Temp" secondAttribute="trailing" constant="15" id="c5"/>
+                                                                    <constraint firstAttribute="bottom" secondItem="Val-Temp" secondAttribute="bottom" constant="24" id="c6"/>
+                                                                    <constraint firstItem="Val-Temp" firstAttribute="leading" secondItem="Card-Temp" secondAttribute="leading" constant="15" id="c7"/>
+                                                                    <constraint firstAttribute="trailing" secondItem="Val-Temp" secondAttribute="trailing" constant="15" id="c8"/>
+                                                                </constraints>
+                                                                <userDefinedRuntimeAttributes>
+                                                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                                        <integer key="value" value="20"/>
+                                                                    </userDefinedRuntimeAttribute>
+                                                                </userDefinedRuntimeAttributes>
+                                                            </view>
+                                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Card-Hum">
+                                                                <rect key="frame" x="175" y="0.0" width="160" height="120"/>
+                                                                <subviews>
+                                                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" image="drop.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="Icon-Hum">
+                                                                        <rect key="frame" x="15" y="15.5" width="20" height="19"/>
+                                                                        <color key="tintColor" systemColor="systemBlueColor"/>
+                                                                        <constraints>
+                                                                            <constraint firstAttribute="height" constant="20" id="h-h"/>
+                                                                            <constraint firstAttribute="width" constant="20" id="h-w"/>
+                                                                        </constraints>
+                                                                    </imageView>
+                                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="HUMEDAD" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Lbl-Hum">
+                                                                        <rect key="frame" x="40" y="18" width="105" height="14.5"/>
+                                                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="12"/>
+                                                                        <color key="textColor" systemColor="systemGrayColor"/>
+                                                                        <nil key="highlightedColor"/>
+                                                                    </label>
+                                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="--%" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Val-Hum">
+                                                                        <rect key="frame" x="15" y="60" width="130" height="36"/>
+                                                                        <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="30"/>
+                                                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                        <nil key="highlightedColor"/>
+                                                                    </label>
+                                                                </subviews>
+                                                                <color key="backgroundColor" red="0.10980392160000001" green="0.10980392160000001" blue="0.1176470588" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                                <constraints>
+                                                                    <constraint firstAttribute="trailing" secondItem="Val-Hum" secondAttribute="trailing" constant="15" id="h1"/>
+                                                                    <constraint firstItem="Val-Hum" firstAttribute="leading" secondItem="Card-Hum" secondAttribute="leading" constant="15" id="h2"/>
+                                                                    <constraint firstAttribute="bottom" secondItem="Val-Hum" secondAttribute="bottom" constant="24" id="h3"/>
+                                                                    <constraint firstAttribute="trailing" secondItem="Lbl-Hum" secondAttribute="trailing" constant="15" id="h4"/>
+                                                                    <constraint firstItem="Lbl-Hum" firstAttribute="leading" secondItem="Icon-Hum" secondAttribute="trailing" constant="5" id="h5"/>
+                                                                    <constraint firstItem="Lbl-Hum" firstAttribute="centerY" secondItem="Icon-Hum" secondAttribute="centerY" id="h6"/>
+                                                                    <constraint firstItem="Icon-Hum" firstAttribute="top" secondItem="Card-Hum" secondAttribute="top" constant="15" id="h7"/>
+                                                                    <constraint firstItem="Icon-Hum" firstAttribute="leading" secondItem="Card-Hum" secondAttribute="leading" constant="15" id="h8"/>
+                                                                </constraints>
+                                                                <userDefinedRuntimeAttributes>
+                                                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                                        <integer key="value" value="20"/>
+                                                                    </userDefinedRuntimeAttribute>
+                                                                </userDefinedRuntimeAttributes>
+                                                            </view>
+                                                        </subviews>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="120" id="R1-H"/>
+                                                        </constraints>
+                                                    </stackView>
+                                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="15" translatesAutoresizingMaskIntoConstraints="NO" id="Row-2">
+                                                        <rect key="frame" x="0.0" y="135" width="335" height="120"/>
+                                                        <subviews>
+                                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Card-Vib">
+                                                                <rect key="frame" x="0.0" y="0.0" width="160" height="120"/>
+                                                                <subviews>
+                                                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" image="waveform.path.ecg" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="Icon-Vib">
+                                                                        <rect key="frame" x="15" y="15.5" width="20" height="19.5"/>
+                                                                        <color key="tintColor" systemColor="systemPurpleColor"/>
+                                                                        <constraints>
+                                                                            <constraint firstAttribute="height" constant="20" id="v-h"/>
+                                                                            <constraint firstAttribute="width" constant="20" id="v-w"/>
+                                                                        </constraints>
+                                                                    </imageView>
+                                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="MOVIMIENTO" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Lbl-Vib">
+                                                                        <rect key="frame" x="40" y="18" width="105" height="14.5"/>
+                                                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="12"/>
+                                                                        <color key="textColor" systemColor="systemGrayColor"/>
+                                                                        <nil key="highlightedColor"/>
+                                                                    </label>
+                                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="--" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Val-Vib">
+                                                                        <rect key="frame" x="15" y="65" width="130" height="29"/>
+                                                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="24"/>
+                                                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                        <nil key="highlightedColor"/>
+                                                                    </label>
+                                                                </subviews>
+                                                                <color key="backgroundColor" red="0.10980392160000001" green="0.10980392160000001" blue="0.1176470588" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                                <constraints>
+                                                                    <constraint firstAttribute="trailing" secondItem="Val-Vib" secondAttribute="trailing" constant="15" id="v1"/>
+                                                                    <constraint firstItem="Val-Vib" firstAttribute="leading" secondItem="Card-Vib" secondAttribute="leading" constant="15" id="v2"/>
+                                                                    <constraint firstAttribute="bottom" secondItem="Val-Vib" secondAttribute="bottom" constant="26" id="v3"/>
+                                                                    <constraint firstAttribute="trailing" secondItem="Lbl-Vib" secondAttribute="trailing" constant="15" id="v4"/>
+                                                                    <constraint firstItem="Lbl-Vib" firstAttribute="leading" secondItem="Icon-Vib" secondAttribute="trailing" constant="5" id="v5"/>
+                                                                    <constraint firstItem="Lbl-Vib" firstAttribute="centerY" secondItem="Icon-Vib" secondAttribute="centerY" id="v6"/>
+                                                                    <constraint firstItem="Icon-Vib" firstAttribute="top" secondItem="Card-Vib" secondAttribute="top" constant="15" id="v7"/>
+                                                                    <constraint firstItem="Icon-Vib" firstAttribute="leading" secondItem="Card-Vib" secondAttribute="leading" constant="15" id="v8"/>
+                                                                </constraints>
+                                                                <userDefinedRuntimeAttributes>
+                                                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                                        <integer key="value" value="20"/>
+                                                                    </userDefinedRuntimeAttribute>
+                                                                </userDefinedRuntimeAttributes>
+                                                            </view>
+                                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Card-Prox">
+                                                                <rect key="frame" x="175" y="0.0" width="160" height="120"/>
+                                                                <subviews>
+                                                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" image="antenna.radiowaves.left.and.right" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="Icon-Prox">
+                                                                        <rect key="frame" x="15" y="15.5" width="20" height="18"/>
+                                                                        <color key="tintColor" systemColor="systemYellowColor"/>
+                                                                        <constraints>
+                                                                            <constraint firstAttribute="height" constant="20" id="p-h"/>
+                                                                            <constraint firstAttribute="width" constant="20" id="p-w"/>
+                                                                        </constraints>
+                                                                    </imageView>
+                                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="PROXIMIDAD" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Lbl-Prox">
+                                                                        <rect key="frame" x="40" y="18" width="105" height="14.5"/>
+                                                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="12"/>
+                                                                        <color key="textColor" systemColor="systemGrayColor"/>
+                                                                        <nil key="highlightedColor"/>
+                                                                    </label>
+                                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="--" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="12" translatesAutoresizingMaskIntoConstraints="NO" id="Val-Prox">
+                                                                        <rect key="frame" x="15" y="60" width="130" height="26.5"/>
+                                                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="22"/>
+                                                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                        <nil key="highlightedColor"/>
+                                                                    </label>
+                                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0 cm" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Lbl-Dist-Small">
+                                                                        <rect key="frame" x="75" y="93" width="75" height="17"/>
+                                                                        <constraints>
+                                                                            <constraint firstAttribute="width" constant="75" id="dist-w"/>
+                                                                        </constraints>
+                                                                        <fontDescription key="fontDescription" type="system" weight="light" pointSize="14"/>
+                                                                        <color key="textColor" systemColor="systemGrayColor"/>
+                                                                        <nil key="highlightedColor"/>
+                                                                    </label>
+                                                                </subviews>
+                                                                <color key="backgroundColor" red="0.10980392160000001" green="0.10980392160000001" blue="0.1176470588" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                                <constraints>
+                                                                    <constraint firstAttribute="trailing" secondItem="Lbl-Dist-Small" secondAttribute="trailing" constant="10" id="dist-1"/>
+                                                                    <constraint firstAttribute="bottom" secondItem="Lbl-Dist-Small" secondAttribute="bottom" constant="10" id="dist-2"/>
+                                                                    <constraint firstAttribute="trailing" secondItem="Val-Prox" secondAttribute="trailing" constant="15" id="p1"/>
+                                                                    <constraint firstItem="Val-Prox" firstAttribute="leading" secondItem="Card-Prox" secondAttribute="leading" constant="15" id="p2"/>
+                                                                    <constraint firstItem="Val-Prox" firstAttribute="top" secondItem="Lbl-Prox" secondAttribute="bottom" constant="27.666666666666664" id="p3"/>
+                                                                    <constraint firstAttribute="trailing" secondItem="Lbl-Prox" secondAttribute="trailing" constant="15" id="p4"/>
+                                                                    <constraint firstItem="Lbl-Prox" firstAttribute="leading" secondItem="Icon-Prox" secondAttribute="trailing" constant="5" id="p5"/>
+                                                                    <constraint firstItem="Lbl-Prox" firstAttribute="centerY" secondItem="Icon-Prox" secondAttribute="centerY" id="p6"/>
+                                                                    <constraint firstItem="Icon-Prox" firstAttribute="top" secondItem="Card-Prox" secondAttribute="top" constant="15" id="p7"/>
+                                                                    <constraint firstItem="Icon-Prox" firstAttribute="leading" secondItem="Card-Prox" secondAttribute="leading" constant="15" id="p8"/>
+                                                                </constraints>
+                                                                <userDefinedRuntimeAttributes>
+                                                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                                        <integer key="value" value="20"/>
+                                                                    </userDefinedRuntimeAttribute>
+                                                                </userDefinedRuntimeAttributes>
+                                                            </view>
+                                                        </subviews>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="120" id="R2-H"/>
+                                                        </constraints>
+                                                    </stackView>
+                                                </subviews>
+                                            </stackView>
+
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ÚLTIMA ACTIVIDAD" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Tit-Logs">
+                                                <rect key="frame" x="20" y="740" width="335" height="20"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="20" id="Tit-Logs-H"/>
+                                                </constraints>
+                                                <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
+                                                <color key="textColor" systemColor="systemGrayColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Container-Logs">
+                                                <rect key="frame" x="20" y="770" width="335" height="80"/>
+                                                <subviews>
+                                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="clock.arrow.circlepath" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="Icon-History">
+                                                        <rect key="frame" x="300" y="28" width="25" height="24"/>
+                                                        <color key="tintColor" systemColor="systemGrayColor"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="width" constant="25" id="icon-hist-w"/>
+                                                            <constraint firstAttribute="height" constant="25" id="icon-hist-h"/>
+                                                        </constraints>
+                                                    </imageView>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Conectando..." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Val-Status">
+                                                        <rect key="frame" x="15" y="10" width="275" height="60"/>
+                                                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="16"/>
+                                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                </subviews>
+                                                <color key="backgroundColor" red="0.10980392160000001" green="0.10980392160000001" blue="0.1176470588" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <constraints>
+                                                    <constraint firstItem="Val-Status" firstAttribute="leading" secondItem="Container-Logs" secondAttribute="leading" constant="15" id="s2"/>
+                                                    <constraint firstItem="Icon-History" firstAttribute="leading" secondItem="Val-Status" secondAttribute="trailing" constant="10" id="s-icon-lead"/>
+                                                    <constraint firstItem="Icon-History" firstAttribute="centerY" secondItem="Container-Logs" secondAttribute="centerY" id="s-icon-y"/>
+                                                    <constraint firstAttribute="trailing" secondItem="Icon-History" secondAttribute="trailing" constant="10" id="s-icon-trail"/>
+                                                    <constraint firstItem="Val-Status" firstAttribute="top" secondItem="Container-Logs" secondAttribute="top" constant="10" id="s4"/>
+                                                    <constraint firstAttribute="bottom" secondItem="Val-Status" secondAttribute="bottom" constant="10" id="s3"/>
+                                                    <constraint firstAttribute="height" constant="80" id="sH"/>
+                                                </constraints>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                        <integer key="value" value="20"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                </userDefinedRuntimeAttributes>
+                                            </view>
+
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="SEGURIDAD" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Tit-Pass">
+                                                <rect key="frame" x="20" y="870" width="335" height="14.5"/>
+                                                <fontDescription key="fontDescription" type="boldSystem" pointSize="12"/>
+                                                <color key="textColor" systemColor="systemGrayColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Container-Pass">
+                                                <rect key="frame" x="20" y="894.5" width="335" height="80"/>
+                                                <subviews>
+                                                    <stackView opaque="NO" contentMode="scaleToFill" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="Stack-Pass">
+                                                        <rect key="frame" x="15" y="15" width="305" height="50"/>
+                                                        <subviews>
+                                                            <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Nueva Clave (4 dígitos)" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Txt-Pass">
+                                                                <rect key="frame" x="0.0" y="0.0" width="185" height="50"/>
+                                                                <color key="backgroundColor" red="0.15686274509803921" green="0.15686274509803921" blue="0.16862745098039217" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                <fontDescription key="fontDescription" type="system" weight="medium" pointSize="16"/>
+                                                                <textInputTraits key="textInputTraits" keyboardType="numberPad" secureTextEntry="YES"/>
+                                                            </textField>
+                                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Btn-SavePass">
+                                                                <rect key="frame" x="195" y="0.0" width="110" height="50"/>
+                                                                <constraints>
+                                                                    <constraint firstAttribute="width" constant="110" id="btn-w"/>
+                                                                </constraints>
+                                                                <state key="normal" title="Button"/>
+                                                                <buttonConfiguration key="configuration" style="filled" title="ACTUALIZAR">
+                                                                    <fontDescription key="titleFontDescription" type="boldSystem" pointSize="12"/>
+                                                                    <color key="baseForegroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                    <color key="baseBackgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                </buttonConfiguration>
+                                                                <connections>
+                                                                    <action selector="changePasswordTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="act-save"/>
+                                                                </connections>
+                                                            </button>
+                                                        </subviews>
+                                                    </stackView>
+                                                </subviews>
+                                                <color key="backgroundColor" red="0.10980392160000001" green="0.10980392160000001" blue="0.1176470588" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <constraints>
+                                                    <constraint firstItem="Stack-Pass" firstAttribute="leading" secondItem="Container-Pass" secondAttribute="leading" constant="15" id="pass-1"/>
+                                                    <constraint firstAttribute="trailing" secondItem="Stack-Pass" secondAttribute="trailing" constant="15" id="pass-2"/>
+                                                    <constraint firstAttribute="bottom" secondItem="Stack-Pass" secondAttribute="bottom" constant="15" id="pass-3"/>
+                                                    <constraint firstItem="Stack-Pass" firstAttribute="top" secondItem="Container-Pass" secondAttribute="top" constant="15" id="pass-4"/>
+                                                    <constraint firstAttribute="height" constant="80" id="pass-H"/>
+                                                </constraints>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                        <integer key="value" value="20"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                </userDefinedRuntimeAttributes>
+                                            </view>
+
+                                        </subviews>
+                                        
+                                        <constraints>
+                                            <constraint firstItem="Btn-Logout" firstAttribute="top" secondItem="Content-View" secondAttribute="top" constant="10" id="log-top"/>
+                                            <constraint firstItem="Btn-Logout" firstAttribute="leading" secondItem="Content-View" secondAttribute="leading" constant="20" id="log-lead"/>
+
+                                            <constraint firstItem="Header-Card" firstAttribute="top" secondItem="Btn-Logout" secondAttribute="bottom" constant="10" id="head-top"/>
+                                            <constraint firstItem="Header-Card" firstAttribute="leading" secondItem="Content-View" secondAttribute="leading" constant="20" id="head-lead"/>
+                                            <constraint firstAttribute="trailing" secondItem="Header-Card" secondAttribute="trailing" constant="20" id="head-trail"/>
+
+                                            <constraint firstItem="Servo-Container" firstAttribute="top" secondItem="Header-Card" secondAttribute="bottom" constant="30" id="servo-top"/>
+                                            <constraint firstItem="Servo-Container" firstAttribute="centerX" secondItem="Content-View" secondAttribute="centerX" id="servo-x"/>
+
+                                            <constraint firstItem="Tit-LastData" firstAttribute="top" secondItem="Servo-Container" secondAttribute="bottom" constant="30" id="tit-data-top"/>
+                                            <constraint firstItem="Tit-LastData" firstAttribute="leading" secondItem="Content-View" secondAttribute="leading" constant="20" id="tit-data-lead"/>
+                                            <constraint firstAttribute="trailing" secondItem="Tit-LastData" secondAttribute="trailing" constant="20" id="tit-data-trail"/>
+
+                                            <constraint firstItem="Stack-Sensors" firstAttribute="top" secondItem="Tit-LastData" secondAttribute="bottom" constant="10" id="stack-top"/>
+                                            <constraint firstItem="Stack-Sensors" firstAttribute="leading" secondItem="Content-View" secondAttribute="leading" constant="20" id="stack-lead"/>
+                                            <constraint firstAttribute="trailing" secondItem="Stack-Sensors" secondAttribute="trailing" constant="20" id="stack-trail"/>
+
+                                            <constraint firstItem="Tit-Logs" firstAttribute="top" secondItem="Stack-Sensors" secondAttribute="bottom" constant="20" id="tit-logs-top"/>
+                                            <constraint firstItem="Tit-Logs" firstAttribute="leading" secondItem="Content-View" secondAttribute="leading" constant="20" id="tit-logs-lead"/>
+                                            <constraint firstAttribute="trailing" secondItem="Tit-Logs" secondAttribute="trailing" constant="20" id="tit-logs-trail"/>
+
+                                            <constraint firstItem="Container-Logs" firstAttribute="top" secondItem="Tit-Logs" secondAttribute="bottom" constant="10" id="cont-logs-top"/>
+                                            <constraint firstItem="Container-Logs" firstAttribute="leading" secondItem="Content-View" secondAttribute="leading" constant="20" id="cont-logs-lead"/>
+                                            <constraint firstAttribute="trailing" secondItem="Container-Logs" secondAttribute="trailing" constant="20" id="cont-logs-trail"/>
+
+                                            <constraint firstItem="Tit-Pass" firstAttribute="top" secondItem="Container-Logs" secondAttribute="bottom" constant="20" id="tit-pass-top"/>
+                                            <constraint firstItem="Tit-Pass" firstAttribute="leading" secondItem="Content-View" secondAttribute="leading" constant="20" id="tit-pass-lead"/>
+                                            <constraint firstAttribute="trailing" secondItem="Tit-Pass" secondAttribute="trailing" constant="20" id="tit-pass-trail"/>
+
+                                            <constraint firstItem="Container-Pass" firstAttribute="top" secondItem="Tit-Pass" secondAttribute="bottom" constant="10" id="cont-pass-top"/>
+                                            <constraint firstItem="Container-Pass" firstAttribute="leading" secondItem="Content-View" secondAttribute="leading" constant="20" id="cont-pass-lead"/>
+                                            <constraint firstAttribute="trailing" secondItem="Container-Pass" secondAttribute="trailing" constant="20" id="cont-pass-trail"/>
+
+                                            <constraint firstAttribute="height" constant="1000" id="content-h"/>
+                                        </constraints>
+                                    </view>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstItem="Content-View" firstAttribute="top" secondItem="Scroll-Main" secondAttribute="top" id="201"/>
+                                    <constraint firstItem="Content-View" firstAttribute="leading" secondItem="Scroll-Main" secondAttribute="leading" id="202"/>
+                                    <constraint firstItem="Content-View" firstAttribute="bottom" secondItem="Scroll-Main" secondAttribute="bottom" id="203"/>
+                                    <constraint firstItem="Content-View" firstAttribute="trailing" secondItem="Scroll-Main" secondAttribute="trailing" id="204"/>
+                                    <constraint firstItem="Content-View" firstAttribute="width" secondItem="Scroll-Main" secondAttribute="width" id="205"/>
+                                </constraints>
+                            </scrollView>
+                        </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="Scroll-Main" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="301"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="Scroll-Main" secondAttribute="bottom" id="302"/>
+                            <constraint firstItem="Scroll-Main" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="50" id="303"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="Scroll-Main" secondAttribute="trailing" id="304"/>
+                        </constraints>
                     </view>
+                    <connections>
+                        <outlet property="distanceLabel" destination="Lbl-Dist-Small" id="con-dist"/>
+                        <outlet property="humLabel" destination="Val-Hum" id="con-hum"/>
+                        <outlet property="lockButton" destination="Btn-Lock" id="con-lock"/>
+                        <outlet property="passwordTextField" destination="Txt-Pass" id="con-pass"/>
+                        <outlet property="proximityLabel" destination="Val-Prox" id="con-prox"/>
+                        <outlet property="statusLabel" destination="Val-Status" id="con-stat"/>
+                        <outlet property="tempLabel" destination="Val-Temp" id="con-temp"/>
+                        <outlet property="vibrationLabel" destination="Val-Vib" id="con-vib"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
+            <point key="canvasLocation" x="135.1145038167939" y="3.5211267605633805"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="antenna.radiowaves.left.and.right" catalog="system" width="128" height="111"/>
+        <image name="clock.arrow.circlepath" catalog="system" width="128" height="112"/>
+        <image name="drop.fill" catalog="system" width="96" height="128"/>
+        <image name="letras_logo" width="415" height="68"/>
+        <image name="lock.fill" catalog="system" width="111" height="128"/>
+        <image name="rectangle.portrait.and.arrow.right" catalog="system" width="128" height="108"/>
+        <image name="thermometer.medium" catalog="system" width="80" height="128"/>
+        <image name="waveform.path.ecg" catalog="system" width="128" height="125"/>
+        <systemColor name="systemBlueColor">
+            <color red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="systemGrayColor">
+            <color red="0.5568627451" green="0.5568627451" blue="0.57647058819999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="systemGreenColor">
+            <color red="0.20392156859999999" green="0.78039215689999997" blue="0.34901960780000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="systemOrangeColor">
+            <color red="1" green="0.58431372550000005" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="systemPurpleColor">
+            <color red="0.68627450980000004" green="0.32156862749999998" blue="0.87058823529999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="systemRedColor">
+            <color red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="systemYellowColor">
+            <color red="1" green="0.80000000000000004" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+    </resources>
 </document>
