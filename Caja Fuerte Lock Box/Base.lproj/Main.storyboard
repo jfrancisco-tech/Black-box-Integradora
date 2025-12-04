@@ -24,6 +24,7 @@
                                         <rect key="frame" x="0.0" y="0.0" width="375" height="1000"/>
                                         <subviews>
                                             
+                                            <!-- BOTÓN LOGOUT -->
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Btn-Logout">
                                                 <rect key="frame" x="20" y="10" width="50" height="50"/>
                                                 <constraints>
@@ -40,6 +41,7 @@
                                                 </connections>
                                             </button>
 
+                                            <!-- HEADER (LOGO) -->
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Header-Card">
                                                 <rect key="frame" x="20" y="70" width="335" height="80"/>
                                                 <subviews>
@@ -58,6 +60,7 @@
                                                 </constraints>
                                             </view>
 
+                                            <!-- BOTÓN CANDADO GIGANTE -->
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Servo-Container">
                                                 <rect key="frame" x="67.5" y="170" width="240" height="240"/>
                                                 <subviews>
@@ -96,6 +99,7 @@
                                                 </constraints>
                                             </view>
 
+                                            <!-- TÍTULO SENSORES -->
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ÚLTIMOS DATOS REGISTRADOS" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Tit-LastData">
                                                 <rect key="frame" x="20" y="440" width="335" height="15"/>
                                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="12"/>
@@ -103,12 +107,15 @@
                                                 <nil key="highlightedColor"/>
                                             </label>
 
+                                            <!-- GRID DE SENSORES -->
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="15" translatesAutoresizingMaskIntoConstraints="NO" id="Stack-Sensors">
                                                 <rect key="frame" x="20" y="465" width="335" height="255"/>
                                                 <subviews>
+                                                    <!-- FILA 1 -->
                                                     <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="15" translatesAutoresizingMaskIntoConstraints="NO" id="Row-1">
                                                         <rect key="frame" x="0.0" y="0.0" width="335" height="120"/>
                                                         <subviews>
+                                                            <!-- TEMP -->
                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Card-Temp">
                                                                 <rect key="frame" x="0.0" y="0.0" width="160" height="120"/>
                                                                 <subviews>
@@ -150,6 +157,7 @@
                                                                     </userDefinedRuntimeAttribute>
                                                                 </userDefinedRuntimeAttributes>
                                                             </view>
+                                                            <!-- HUM -->
                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Card-Hum">
                                                                 <rect key="frame" x="175" y="0.0" width="160" height="120"/>
                                                                 <subviews>
@@ -196,9 +204,12 @@
                                                             <constraint firstAttribute="height" constant="120" id="R1-H"/>
                                                         </constraints>
                                                     </stackView>
+                                                    
+                                                    <!-- FILA 2 -->
                                                     <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="15" translatesAutoresizingMaskIntoConstraints="NO" id="Row-2">
                                                         <rect key="frame" x="0.0" y="135" width="335" height="120"/>
                                                         <subviews>
+                                                            <!-- VIB -->
                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Card-Vib">
                                                                 <rect key="frame" x="0.0" y="0.0" width="160" height="120"/>
                                                                 <subviews>
@@ -240,6 +251,7 @@
                                                                     </userDefinedRuntimeAttribute>
                                                                 </userDefinedRuntimeAttributes>
                                                             </view>
+                                                            <!-- PROX -->
                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Card-Prox">
                                                                 <rect key="frame" x="175" y="0.0" width="160" height="120"/>
                                                                 <subviews>
@@ -300,51 +312,76 @@
                                                 </subviews>
                                             </stackView>
 
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ÚLTIMA ACTIVIDAD" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Tit-Logs">
+                                            <!-- SECCIÓN HISTORIAL (REEMPLAZADA) -->
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="HISTORIAL DE EVENTOS" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Tit-Logs">
                                                 <rect key="frame" x="20" y="740" width="335" height="20"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="20" id="Tit-Logs-H"/>
                                                 </constraints>
-                                                <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
+                                                <fontDescription key="fontDescription" type="boldSystem" pointSize="12"/>
                                                 <color key="textColor" systemColor="systemGrayColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
 
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Container-Logs">
-                                                <rect key="frame" x="20" y="770" width="335" height="80"/>
+                                                <rect key="frame" x="20" y="770" width="335" height="60"/>
                                                 <subviews>
-                                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="clock.arrow.circlepath" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="Icon-History">
-                                                        <rect key="frame" x="300" y="28" width="25" height="24"/>
-                                                        <color key="tintColor" systemColor="systemGrayColor"/>
+                                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="clock.arrow.circlepath" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="Icon-History-Left">
+                                                        <rect key="frame" x="15" y="18" width="24" height="23"/>
+                                                        <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <constraints>
-                                                            <constraint firstAttribute="width" constant="25" id="icon-hist-w"/>
-                                                            <constraint firstAttribute="height" constant="25" id="icon-hist-h"/>
+                                                            <constraint firstAttribute="width" constant="24" id="ihl-w"/>
+                                                            <constraint firstAttribute="height" constant="24" id="ihl-h"/>
                                                         </constraints>
                                                     </imageView>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Conectando..." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Val-Status">
-                                                        <rect key="frame" x="15" y="10" width="275" height="60"/>
-                                                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="16"/>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Ver registro de actividad" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Val-Status">
+                                                        <rect key="frame" x="54" y="0.0" width="236" height="60"/>
+                                                        <fontDescription key="fontDescription" type="system" weight="medium" pointSize="16"/>
                                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
+                                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="chevron.right" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="Icon-Arrow-Right">
+                                                        <rect key="frame" x="300" y="22" width="15" height="16.5"/>
+                                                        <color key="tintColor" systemColor="systemGrayColor"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="width" constant="15" id="iar-w"/>
+                                                            <constraint firstAttribute="height" constant="20" id="iar-h"/>
+                                                        </constraints>
+                                                    </imageView>
+                                                    <!-- Botón invisible -->
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Btn-OpenHistory">
+                                                        <rect key="frame" x="0.0" y="0.0" width="335" height="60"/>
+                                                        <state key="normal" title="Button"/>
+                                                        <buttonConfiguration key="configuration" style="plain" title=" "/>
+                                                        <connections>
+                                                            <action selector="abrirHistorialTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="act-hist"/>
+                                                        </connections>
+                                                    </button>
                                                 </subviews>
-                                                <color key="backgroundColor" red="0.10980392160000001" green="0.10980392160000001" blue="0.1176470588" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <color key="backgroundColor" red="0.15686274510000001" green="0.15686274510000001" blue="0.16862745100000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <constraints>
-                                                    <constraint firstItem="Val-Status" firstAttribute="leading" secondItem="Container-Logs" secondAttribute="leading" constant="15" id="s2"/>
-                                                    <constraint firstItem="Icon-History" firstAttribute="leading" secondItem="Val-Status" secondAttribute="trailing" constant="10" id="s-icon-lead"/>
-                                                    <constraint firstItem="Icon-History" firstAttribute="centerY" secondItem="Container-Logs" secondAttribute="centerY" id="s-icon-y"/>
-                                                    <constraint firstAttribute="trailing" secondItem="Icon-History" secondAttribute="trailing" constant="10" id="s-icon-trail"/>
-                                                    <constraint firstItem="Val-Status" firstAttribute="top" secondItem="Container-Logs" secondAttribute="top" constant="10" id="s4"/>
-                                                    <constraint firstAttribute="bottom" secondItem="Val-Status" secondAttribute="bottom" constant="10" id="s3"/>
-                                                    <constraint firstAttribute="height" constant="80" id="sH"/>
+                                                    <constraint firstItem="Icon-History-Left" firstAttribute="centerY" secondItem="Container-Logs" secondAttribute="centerY" id="cl-1"/>
+                                                    <constraint firstItem="Icon-History-Left" firstAttribute="leading" secondItem="Container-Logs" secondAttribute="leading" constant="15" id="cl-2"/>
+                                                    <constraint firstItem="Val-Status" firstAttribute="leading" secondItem="Icon-History-Left" secondAttribute="trailing" constant="15" id="cl-3"/>
+                                                    <constraint firstItem="Val-Status" firstAttribute="top" secondItem="Container-Logs" secondAttribute="top" id="cl-4"/>
+                                                    <constraint firstAttribute="bottom" secondItem="Val-Status" secondAttribute="bottom" id="cl-5"/>
+                                                    <constraint firstAttribute="trailing" secondItem="Icon-Arrow-Right" secondAttribute="trailing" constant="20" id="cl-6"/>
+                                                    <constraint firstItem="Icon-Arrow-Right" firstAttribute="centerY" secondItem="Container-Logs" secondAttribute="centerY" id="cl-7"/>
+                                                    <constraint firstItem="Icon-Arrow-Right" firstAttribute="leading" secondItem="Val-Status" secondAttribute="trailing" constant="10" id="cl-8"/>
+                                                    <constraint firstAttribute="bottom" secondItem="Btn-OpenHistory" secondAttribute="bottom" id="cl-9"/>
+                                                    <constraint firstAttribute="trailing" secondItem="Btn-OpenHistory" secondAttribute="trailing" id="cl-10"/>
+                                                    <constraint firstItem="Btn-OpenHistory" firstAttribute="top" secondItem="Container-Logs" secondAttribute="top" id="cl-11"/>
+                                                    <constraint firstItem="Btn-OpenHistory" firstAttribute="leading" secondItem="Container-Logs" secondAttribute="leading" id="cl-12"/>
+                                                    <constraint firstAttribute="height" constant="60" id="sH"/>
                                                 </constraints>
                                                 <userDefinedRuntimeAttributes>
                                                     <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                                        <integer key="value" value="20"/>
+                                                        <integer key="value" value="15"/>
                                                     </userDefinedRuntimeAttribute>
                                                 </userDefinedRuntimeAttributes>
                                             </view>
 
+                                            <!-- CAMBIO CLAVE -->
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="SEGURIDAD" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Tit-Pass">
                                                 <rect key="frame" x="20" y="870" width="335" height="14.5"/>
                                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="12"/>
@@ -462,6 +499,8 @@
                         <outlet property="lockButton" destination="Btn-Lock" id="con-lock"/>
                         <outlet property="passwordTextField" destination="Txt-Pass" id="con-pass"/>
                         <outlet property="proximityLabel" destination="Val-Prox" id="con-prox"/>
+                        <!-- Nota: Val-Status ahora apunta al label estático "Ver registro..." -->
+                        <!-- Si no lo usas en código, puedes borrar el outlet, pero no da error si se queda -->
                         <outlet property="statusLabel" destination="Val-Status" id="con-stat"/>
                         <outlet property="tempLabel" destination="Val-Temp" id="con-temp"/>
                         <outlet property="vibrationLabel" destination="Val-Vib" id="con-vib"/>
@@ -474,6 +513,7 @@
     </scenes>
     <resources>
         <image name="antenna.radiowaves.left.and.right" catalog="system" width="128" height="111"/>
+        <image name="chevron.right" catalog="system" width="97" height="128"/>
         <image name="clock.arrow.circlepath" catalog="system" width="128" height="112"/>
         <image name="drop.fill" catalog="system" width="96" height="128"/>
         <image name="letras_logo" width="415" height="68"/>

@@ -1,8 +1,11 @@
 import UIKit
+import UserNotifications
 
-// MARK: - 1. ESTRUCTURAS DE DATOS
+// MARK: - 1. ESTRUCTURAS DE DATOS (MODELOS)
+// EXPLICACION: Estas estructuras mapean el JSON que llega de la API a objetos de Swift.
+
 struct UltimoEstadoResponse: Codable {
-    let fecha_bloque: String
+    let id_bloque: String
     let hora_lectura: String
     let datos: DatosSensores
 }
@@ -20,13 +23,13 @@ struct DatosSensores: Codable {
 struct EventoHistorial: Codable {
     let mensaje: String
     let hora: String
-    let fecha_bloque: String
+    let timestamp: Int64?
 }
 
 // MARK: - 2. CLASE PRINCIPAL
-class ViewController: UIViewController {
+class ViewController: UIViewController, UNUserNotificationCenterDelegate {
 
-    // MARK: - IBOUTLETS
+    // MARK: - IBOUTLETS (Conexiones con la interfaz gráfica)
     @IBOutlet weak var statusLabel: UILabel!
     @IBOutlet weak var lockButton: UIButton!
     @IBOutlet weak var tempLabel: UILabel!
@@ -40,21 +43,36 @@ class ViewController: UIViewController {
     var isLocked = true
     let baseUrl = "https://api-sensores-348016469746.us-central1.run.app"
     
-    // Variables para cachear datos
-    var ultimosDatos: DatosSensores?
-    var ultimoHistorial: EventoHistorial?
-
-    // MARK: - LIFECYCLE
+    // EXPLICACION: Umbrales de Histeresis para evitar lecturas falsas y spam.
+    // Se definen limites altos para activar la alarma y bajos para desactivarla.
+    let LIMITE_DISTANCIA = 15.0
+    let LIMITE_TEMP_ALTA = 30.0
+    let LIMITE_TEMP_BAJA = 28.0 // Temperatura debe bajar hasta aqui para resetear la alerta
+    let LIMITE_HUM_ALTA = 80.0
+    let LIMITE_HUM_BAJA = 75.0 // Humedad debe bajar hasta aqui para resetear la alerta
+    
+    // Banderas de estado para controlar el flujo de notificaciones locales
+    var yaNotifiqueRobo = false
+    var yaNotifiqueAlarma = false
+    var yaNotifiqueTemp = false
+    var yaNotifiqueHum = false
+    
+    // MARK: - LIFECYCLE (Ciclo de vida de la pantalla)
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // Configurar delegado para permitir notificaciones aun con la app abierta
+        UNUserNotificationCenter.current().delegate = self
+        
         setupDesign()
+        solicitarPermisosNotificacion()
         
-        print("🚀 SISTEMA INICIADO: Conectando a la nube...")
+        print("SISTEMA INICIADO: Vista cargada correctamente")
         
-        // Primera carga inmediata
+        // Primera carga de datos
         fetchUltimoEstado()
         
-        // Timer: Actualiza estado cada 3 segundos
+        // EXPLICACION: Timer que consulta la API cada 3 segundos (Polling)
         Timer.scheduledTimer(withTimeInterval: 3.0, repeats: true) { [weak self] _ in
             self?.fetchUltimoEstado()
         }
@@ -62,205 +80,156 @@ class ViewController: UIViewController {
         configurarGestos()
     }
     
+    // Metodo para manejar notificaciones en primer plano (Foreground)
+    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        completionHandler([.banner, .list, .sound])
+    }
+    
     func setupDesign() {
-        view.backgroundColor = UIColor(red: 0.11, green: 0.11, blue: 0.12, alpha: 1.0)
+        view.backgroundColor = UIColor(red: 0.11, green: 0.11, blue: 0.12, alpha: 1.0) // Fondo oscuro profesional
         actualizarBotonVisualmente()
+        statusLabel.text = "Ver registro de actividad"
     }
     
     func configurarGestos() {
-        statusLabel.isUserInteractionEnabled = true
-        let tapLabel = UITapGestureRecognizer(target: self, action: #selector(abrirHistorial))
-        statusLabel.addGestureRecognizer(tapLabel)
-        
+        // Ocultar teclado al tocar fuera de los campos de texto
         let tapView = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         view.addGestureRecognizer(tapView)
     }
     
+    func solicitarPermisosNotificacion() {
+        let center = UNUserNotificationCenter.current()
+        center.requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
+            if granted { print("Permiso de notificaciones concedido") }
+        }
+    }
+    
     @objc func dismissKeyboard() { view.endEditing(true) }
 
-    // MARK: - CONSUMIR API
+    // MARK: - CONSUMIR API (Networking)
     
     func fetchUltimoEstado() {
         guard let url = URL(string: "\(baseUrl)/api/ultimo-estado") else { return }
 
-        // 1. Obtener Sensores
         let task = URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
             guard let data = data else { return }
             do {
                 let decoder = JSONDecoder()
                 let respuesta = try decoder.decode(UltimoEstadoResponse.self, from: data)
                 
+                // EXPLICACION: Las actualizaciones de UI deben hacerse en el hilo principal
                 DispatchQueue.main.async {
-                    self?.ultimosDatos = respuesta.datos
                     self?.actualizarInterfaz(con: respuesta.datos)
                 }
-            } catch { print("Error decodificando sensores: \(error)") }
+            } catch { print("Error decodificando respuesta API: \(error)") }
         }
         task.resume()
-        
-        // 2. Obtener Historial
-        guard let urlHistorial = URL(string: "\(baseUrl)/api/historial") else { return }
-        URLSession.shared.dataTask(with: urlHistorial) { [weak self] data, _, _ in
-            guard let data = data else { return }
-            if let lista = try? JSONDecoder().decode([EventoHistorial].self, from: data), let ultimo = lista.first {
-                DispatchQueue.main.async {
-                    self?.ultimoHistorial = ultimo
-                    if let sensores = self?.ultimosDatos {
-                        self?.actualizarEstadoPrincipal(sensores: sensores)
-                    }
-                }
-            }
-        }.resume()
     }
     
-    // MARK: - LÓGICA DE INTERFAZ
+    // MARK: - LÓGICA DE INTERFAZ Y ALERTAS
     
     func actualizarInterfaz(con d: DatosSensores) {
         self.isLocked = !d.puerta_abierta
         actualizarBotonVisualmente()
         
-        // Etiquetas pequeñas
-        tempLabel.text = String(format: "%.1f°C", d.temperatura)
+        // 1. Actualizacion de etiquetas de TEMPERATURA
+        tempLabel.text = String(format: "%.1f C", d.temperatura)
+        if d.temperatura >= LIMITE_TEMP_ALTA {
+            tempLabel.textColor = .systemRed
+        } else {
+            tempLabel.textColor = .white
+        }
+        
+        // 2. Actualizacion de etiquetas de HUMEDAD
         humLabel.text = "\(Int(d.humedad))%"
+        if d.humedad > LIMITE_HUM_ALTA {
+            humLabel.textColor = .systemBlue
+        } else {
+            humLabel.textColor = .white
+        }
+        
+        // 3. Actualizacion de DISTANCIA y Estado del Objeto
         distanceLabel.text = "\(Int(d.distancia)) cm"
         
-        // Colores en etiquetas pequeñas según umbrales
-        if d.distancia < 19.0 {
-            proximityLabel.text = "OBJETO SEGURO"; proximityLabel.textColor = .systemGreen
+        // EXPLICACION: Validacion de presencia. Debe ser > 1.0 para descartar errores de lectura (0.0)
+        if d.distancia > 1.0 && d.distancia < LIMITE_DISTANCIA {
+            proximityLabel.text = "OBJETO SEGURO"
+            proximityLabel.textColor = .systemGreen
+            yaNotifiqueRobo = false // Se resetea la bandera si el objeto regresa
         } else {
-            proximityLabel.text = "OBJETO RETIRADO"; proximityLabel.textColor = .systemRed
+            proximityLabel.text = "SIN OBJETO / RETIRADO"
+            proximityLabel.textColor = .systemRed
         }
         
+        // 4. Estado de VIBRACION
         if d.vibracion {
-            vibrationLabel.text = "¡ALERTA!"; vibrationLabel.textColor = .systemRed
+            vibrationLabel.text = "ALERTA"
+            vibrationLabel.textColor = .systemRed
         } else {
-            vibrationLabel.text = "Estable"; vibrationLabel.textColor = .systemGreen
+            vibrationLabel.text = "Estable"
+            vibrationLabel.textColor = .systemGreen
         }
         
-        // Si hay temperatura extrema, pintar el label pequeño de rojo también
-        tempLabel.textColor = d.temperatura >= 30.0 ? .systemRed : .white
-        
-        // 🔥 ACTUALIZAR EL TEXTO GRANDE (LÓGICA CENTRAL)
-        actualizarEstadoPrincipal(sensores: d)
-    }
-
-    // ✅ LÓGICA CORREGIDA: AZUL PARA CERRADO Y HORA EXACTA DEL HISTORIAL
-    func actualizarEstadoPrincipal(sensores: DatosSensores) {
-        let horaActual = obtenerHoraActual()
-        
-        // ---------------------------------------------------------
-        // 1. NIVEL CRÍTICO (EN VIVO) - SI ESTÁ PASANDO AHORA
-        // ---------------------------------------------------------
-        if sensores.alarma_activa {
-            mostrarTextoEnPantalla(titulo: "🚨 ALARMA SONANDO", hora: horaActual, color: .systemRed)
-            return
-        }
-        
-        // Alerta de Temperatura (>= 30 grados)
-        if sensores.temperatura >= 30.0 {
-            mostrarTextoEnPantalla(titulo: "🔥 ALTA TEMPERATURA", hora: horaActual, color: .systemRed)
-            return
-        }
-        
-        // Alerta de Humedad (> 80%)
-        if sensores.humedad > 80.0 {
-            mostrarTextoEnPantalla(titulo: "💧 ALERTA HUMEDAD", hora: horaActual, color: .systemRed)
-            return
-        }
-        
-        // Vibración activa
-        if sensores.vibracion {
-            mostrarTextoEnPantalla(titulo: "📳 VIBRACIÓN DETECTADA", hora: horaActual, color: .systemRed)
-            return
-        }
-        
-        // Robo de objeto (Distancia >= 19cm significa que quitaron el objeto)
-        if sensores.distancia >= 19.0 {
-            mostrarTextoEnPantalla(titulo: "⚠️ OBJETO SUSTRAÍDO", hora: horaActual, color: .systemRed)
-            return
-        }
-        
-        // ---------------------------------------------------------
-        // 2. NIVEL ADVERTENCIA (INTENTOS FALLIDOS)
-        // ---------------------------------------------------------
-        if let intentos = sensores.intentos, intentos > 0 {
-            mostrarTextoEnPantalla(titulo: "🔐 CLAVE INCORRECTA (\(intentos))", hora: horaActual, color: .systemRed)
-            return
-        }
-
-        // ---------------------------------------------------------
-        // 3. NIVEL HISTORIAL (SOLO SI ES UNA ALERTA RECIENTE)
-        // ---------------------------------------------------------
-        if let ultimo = self.ultimoHistorial {
-            let msg = ultimo.mensaje.uppercased()
-            
-            // Si hay una alerta en el historial que queramos persistir
-            if msg.contains("ROBO") ||
-               msg.contains("VIBRACION") ||
-               msg.contains("VIBRACIÓN") ||
-               msg.contains("RETIRADO") ||
-               msg.contains("INTENTO") ||
-               msg.contains("ALARMA") {
-                
-                // Usamos ultimo.hora para mostrar la hora EXACTA del evento
-                mostrarTextoEnPantalla(titulo: ultimo.mensaje, hora: ultimo.hora, color: .systemRed)
-                return
-            }
-        }
-        
-        // ---------------------------------------------------------
-        // 4. NIVEL NORMAL (ESTADO REAL DE PUERTA)
-        // ---------------------------------------------------------
-        if sensores.puerta_abierta {
-            // Puerta Abierta -> Verde
-            mostrarTextoEnPantalla(titulo: "🔓 Puerta Abierta", hora: horaActual, color: .systemGreen)
-        } else {
-            // Puerta Cerrada -> AZUL (.systemBlue)
-            
-            // Intentamos buscar la hora exacta del cierre en el historial
-            var horaCierre = horaActual
-            if let ultimo = self.ultimoHistorial {
-                let msg = ultimo.mensaje.uppercased()
-                // Si el último mensaje fue sobre la puerta, usamos esa hora
-                if msg.contains("PUERTA") || msg.contains("CERRAR") {
-                    horaCierre = ultimo.hora
-                }
-            }
-            
-            mostrarTextoEnPantalla(titulo: "🔒 Puerta Cerrada", hora: horaCierre, color: .systemBlue)
-        }
-    }
-
-    // He modificado esta función para aceptar un UIColor directamente
-    func mostrarTextoEnPantalla(titulo: String, hora: String, color: UIColor) {
-        let textoCompleto = "\(titulo)\n\(hora) • Ver Historial ›"
-        let attributedString = NSMutableAttributedString(string: textoCompleto)
-        
-        let rangoEnter = (textoCompleto as NSString).range(of: "\n")
-        
-        if rangoEnter.location != NSNotFound {
-            let rangoTitulo = NSRange(location: 0, length: rangoEnter.location)
-            let rangoSubtitulo = NSRange(location: rangoEnter.location, length: textoCompleto.count - rangoEnter.location)
-            
-            // Aplicamos el color recibido (Rojo, Azul o Verde)
-            attributedString.addAttribute(.foregroundColor, value: color, range: rangoTitulo)
-            attributedString.addAttribute(.font, value: UIFont.boldSystemFont(ofSize: 22), range: rangoTitulo)
-            
-            attributedString.addAttribute(.foregroundColor, value: UIColor.lightGray, range: rangoSubtitulo)
-            attributedString.addAttribute(.font, value: UIFont.systemFont(ofSize: 14), range: rangoSubtitulo)
-        }
-        
-        statusLabel.attributedText = attributedString
-        statusLabel.numberOfLines = 2
+        // Llamada a la logica de notificaciones push
+        gestionarNotificaciones(d)
     }
     
-    func obtenerHoraActual() -> String {
-        let f = DateFormatter()
-        f.dateFormat = "hh:mm:ss a"
-        return f.string(from: Date())
+    func gestionarNotificaciones(_ datos: DatosSensores) {
+        
+        // CASO A: ROBO DETECTADO
+        // Se activa si la distancia supera el limite o es 0 (lectura vacia/error critico)
+        let esRobo = datos.distancia >= LIMITE_DISTANCIA || datos.distancia == 0
+        if esRobo {
+            if !yaNotifiqueRobo {
+                enviarNotificacionLocal(titulo: "ALERTA: OBJETO FALTANTE", cuerpo: "La caja esta vacia o el objeto fue retirado.")
+                yaNotifiqueRobo = true
+            }
+        }
+        
+        // CASO B: ALARMA FISICA ACTIVADA
+        if datos.alarma_activa {
+            if !yaNotifiqueAlarma {
+                enviarNotificacionLocal(titulo: "ALERTA: ALARMA SONANDO", cuerpo: "Se ha activado la sirena de seguridad.")
+                yaNotifiqueAlarma = true
+            }
+        } else {
+            yaNotifiqueAlarma = false
+        }
+        
+        // CASO C: TEMPERATURA (Con Histeresis)
+        // Solo notifica si sube de 30. Solo resetea si baja de 28.
+        if datos.temperatura >= LIMITE_TEMP_ALTA {
+            if !yaNotifiqueTemp {
+                enviarNotificacionLocal(titulo: "ALERTA: TEMPERATURA CRITICA", cuerpo: "La temperatura subio a \(datos.temperatura) C. Riesgo para el contenido.")
+                yaNotifiqueTemp = true
+            }
+        } else if datos.temperatura < LIMITE_TEMP_BAJA {
+            yaNotifiqueTemp = false // Resetear bandera
+        }
+        
+        // CASO D: HUMEDAD (Con Histeresis)
+        // Solo notifica si sube de 80. Solo resetea si baja de 75.
+        if datos.humedad > LIMITE_HUM_ALTA {
+            if !yaNotifiqueHum {
+                enviarNotificacionLocal(titulo: "ALERTA: HUMEDAD CRITICA", cuerpo: "Humedad critica del \(Int(datos.humedad))%. Riesgo de daño.")
+                yaNotifiqueHum = true
+            }
+        } else if datos.humedad < LIMITE_HUM_BAJA {
+            yaNotifiqueHum = false // Resetear bandera
+        }
+    }
+    
+    func enviarNotificacionLocal(titulo: String, cuerpo: String) {
+        let content = UNMutableNotificationContent()
+        content.title = titulo
+        content.body = cuerpo
+        content.sound = UNNotificationSound.defaultCritical
+        
+        let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: nil)
+        UNUserNotificationCenter.current().add(request)
     }
 
-    // MARK: - COMANDOS Y BOTONES
+    // MARK: - COMANDOS A LA API
     
     func enviarComandoServo(accion: String) {
         guard let url = URL(string: "\(baseUrl)/api/control-servo") else { return }
@@ -269,9 +238,7 @@ class ViewController: UIViewController {
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         let body: [String: String] = ["accion": accion]
         request.httpBody = try? JSONSerialization.data(withJSONObject: body)
-        
-        let task = URLSession.shared.dataTask(with: request) { _, _, _ in }
-        task.resume()
+        URLSession.shared.dataTask(with: request).resume()
     }
     
     func enviarCambioClave(nuevaClave: String) {
@@ -282,32 +249,35 @@ class ViewController: UIViewController {
         let body: [String: String] = ["nuevaClave": nuevaClave]
         request.httpBody = try? JSONSerialization.data(withJSONObject: body)
         
-        let task = URLSession.shared.dataTask(with: request) { [weak self] _, response, _ in
+        URLSession.shared.dataTask(with: request) { [weak self] _, response, _ in
             if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 {
-                DispatchQueue.main.async { self?.mostrarAlerta(titulo: "Éxito", mensaje: "Nueva clave configurada.") }
+                DispatchQueue.main.async { self?.mostrarAlerta(titulo: "Exito", mensaje: "Clave actualizada correctamente.") }
             }
-        }
-        task.resume()
+        }.resume()
     }
     
-    // MARK: - ACCIONES IBACTION
+    // MARK: - ACTIONS (Botones)
     
-    @objc func abrirHistorial() {
+    @IBAction func abrirHistorialTapped(_ sender: UIButton) {
         let storyboard = UIStoryboard(name: "HistorialStoryBoard", bundle: nil)
         if let historialVC = storyboard.instantiateViewController(withIdentifier: "HistorialViewController") as? HistorialViewController {
             present(historialVC, animated: true)
         }
     }
+    
+    @objc func abrirHistorial() { abrirHistorialTapped(UIButton()) }
 
     @IBAction func lockTapped(_ sender: UIButton) {
-        isLocked.toggle(); actualizarBotonVisualmente()
+        isLocked.toggle()
+        actualizarBotonVisualmente()
         let comando = isLocked ? "CERRAR" : "ABRIR"
         enviarComandoServo(accion: comando)
     }
     
     @IBAction func changePasswordTapped(_ sender: UIButton) {
+        // EXPLICACION: Validacion local antes de enviar a la red
         guard let nuevaClave = passwordTextField.text, nuevaClave.count == 4 else {
-            mostrarAlerta(titulo: "Error", mensaje: "La contraseña debe tener 4 dígitos.")
+            mostrarAlerta(titulo: "Error de Formato", mensaje: "La contraseña debe tener exactamente 4 digitos.")
             return
         }
         enviarCambioClave(nuevaClave: nuevaClave)
@@ -315,16 +285,15 @@ class ViewController: UIViewController {
     }
     
     @IBAction func logoutTapped(_ sender: UIButton) {
-        let alert = UIAlertController(title: "Cerrar Sesión", message: "¿Seguro que deseas salir?", preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "Cancelar", style: .cancel))
+        let alert = UIAlertController(title: "Cerrar Sesion", message: nil, preferredStyle: .actionSheet)
         alert.addAction(UIAlertAction(title: "Salir", style: .destructive, handler: { _ in
             let storyboard = UIStoryboard(name: "LoginStoryBoard", bundle: nil)
             if let loginVC = storyboard.instantiateInitialViewController() {
                 loginVC.modalPresentationStyle = .fullScreen
-                loginVC.modalTransitionStyle = .crossDissolve
                 self.present(loginVC, animated: true)
             }
         }))
+        alert.addAction(UIAlertAction(title: "Cancelar", style: .cancel))
         present(alert, animated: true)
     }
     
@@ -337,16 +306,22 @@ class ViewController: UIViewController {
     func actualizarBotonVisualmente() {
         let texto = isLocked ? " CERRADO" : " ABIERTO"
         let imagenNombre = isLocked ? "lock.fill" : "lock.open.fill"
-        
-        // AQUI CAMBIAMOS EL COLOR DEL BOTÓN A AZUL SI ESTÁ CERRADO
         let color = isLocked ? UIColor.systemBlue : UIColor.systemGreen
         
-        if var config = lockButton.configuration {
+        if #available(iOS 15.0, *) {
+            var config = lockButton.configuration ?? UIButton.Configuration.filled()
             config.title = texto
             config.image = UIImage(systemName: imagenNombre)
             config.baseForegroundColor = color
             lockButton.configuration = config
+        } else {
+            // Fallback para versiones antiguas de iOS
+            lockButton.setTitle(texto, for: .normal)
+            lockButton.setImage(UIImage(systemName: imagenNombre), for: .normal)
+            lockButton.tintColor = color
         }
         lockButton.layer.borderColor = color.cgColor
+        lockButton.layer.borderWidth = 1.0
+        lockButton.layer.cornerRadius = 10
     }
 }
