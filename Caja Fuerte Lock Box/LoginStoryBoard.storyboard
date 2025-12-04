@@ -2,6 +2,7 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23094" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Y6W-OH-hqX">
     <device id="retina6_9" orientation="portrait" appearance="dark"/>
     <dependencies>
+        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23084"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -11,7 +12,7 @@
         <!--Login View Controller-->
         <scene sceneID="s0d-6b-0kx">
             <objects>
-                <viewController storyboardIdentifier="LoginViewController" id="Y6W-OH-hqX" customClass="LoginViewController" customModule="LockBox" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="LoginViewController" id="Y6W-OH-hqX" customClass="LoginViewController" customModule="Caja_Fuerte_Lock_Box" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="5EZ-qb-Rvc">
                         <rect key="frame" x="0.0" y="0.0" width="440" height="956"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -39,7 +40,7 @@
                                         </constraints>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="24"/>
-                                        <textInputTraits key="textInputTraits" keyboardType="numberPad" secureTextEntry="YES"/>
+                                        <textInputTraits key="textInputTraits" autocorrectionType="no"/>
                                         <userDefinedRuntimeAttributes>
                                             <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
                                                 <integer key="value" value="12"/>
@@ -54,7 +55,7 @@
                                         </constraints>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="24"/>
-                                        <textInputTraits key="textInputTraits" keyboardType="numberPad" secureTextEntry="YES"/>
+                                        <textInputTraits key="textInputTraits" autocorrectionType="no" secureTextEntry="YES"/>
                                         <userDefinedRuntimeAttributes>
                                             <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
                                                 <integer key="value" value="12"/>
@@ -79,7 +80,6 @@
                                         </userDefinedRuntimeAttributes>
                                         <connections>
                                             <action selector="ingresoTocado:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="FQG-Pb-KfW"/>
-                                            <action selector="loginTapped:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="act-login"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Register-Btn">
@@ -108,8 +108,9 @@
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="loginButton" destination="Login-Btn" id="out-btn"/>
-                        <outlet property="pinTextField" destination="Pin-Txt" id="out-pin"/>
+                        <outlet property="loginButton" destination="Login-Btn" id="3Kr-dV-JsT"/>
+                        <outlet property="loginPasswordTextField" destination="km9-96-gJo" id="KzN-Ml-5nS"/>
+                        <outlet property="loginUserTextField" destination="Pin-Txt" id="CMV-2P-f7N"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ief-a0-LHa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -119,32 +120,47 @@
         <!--Registro View Controller-->
         <scene sceneID="LQc-MD-piw">
             <objects>
-                <viewController id="fkk-NR-qn3" customClass="RegistroViewController" customModule="LockBox" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="fkk-NR-qn3" customClass="RegistroViewController" customModule="Caja_Fuerte_Lock_Box" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="c5u-4m-sHk">
                         <rect key="frame" x="0.0" y="0.0" width="440" height="956"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="Reg-Stack">
-                                <rect key="frame" x="70" y="193.66666666666663" width="300" height="569"/>
+                                <rect key="frame" x="70" y="219" width="300" height="518"/>
                                 <subviews>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="60" verticalHuggingPriority="60" horizontalCompressionResistancePriority="60" verticalCompressionResistancePriority="60" image="letras_logo" translatesAutoresizingMaskIntoConstraints="NO" id="Yqg-YU-tS6">
-                                        <rect key="frame" x="0.0" y="0.0" width="300" height="199"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="300" height="68"/>
                                     </imageView>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Crear Cuenta" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Reg-Title">
-                                        <rect key="frame" x="0.0" y="219.00000000000003" width="300" height="30"/>
+                                        <rect key="frame" x="0.0" y="88" width="300" height="30"/>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="25"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="NUEVO USUARIO" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Reg-User">
-                                        <rect key="frame" x="0.0" y="269" width="300" height="60"/>
+                                    <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="CÓDIGO DE CAJA" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Reg-User">
+                                        <rect key="frame" x="0.0" y="138" width="300" height="60"/>
                                         <color key="backgroundColor" systemColor="opaqueSeparatorColor"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="60" id="h-reg-user"/>
                                         </constraints>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="24"/>
-                                        <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
+                                        <textInputTraits key="textInputTraits" autocorrectionType="no"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                <integer key="value" value="12"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                    </textField>
+                                    <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="NUEVO USUARIO" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="d7l-ho-YAL">
+                                        <rect key="frame" x="0.0" y="218" width="300" height="60"/>
+                                        <color key="backgroundColor" systemColor="opaqueSeparatorColor"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="60" id="WpH-Yw-4XK"/>
+                                        </constraints>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="24"/>
+                                        <textInputTraits key="textInputTraits" autocorrectionType="no"/>
                                         <userDefinedRuntimeAttributes>
                                             <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
                                                 <integer key="value" value="12"/>
@@ -152,14 +168,14 @@
                                         </userDefinedRuntimeAttributes>
                                     </textField>
                                     <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="NUEVO PASSWORD" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Reg-Pass">
-                                        <rect key="frame" x="0.0" y="349" width="300" height="60"/>
+                                        <rect key="frame" x="0.0" y="298" width="300" height="60"/>
                                         <color key="backgroundColor" systemColor="opaqueSeparatorColor"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="60" id="h-reg-pass"/>
                                         </constraints>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="24"/>
-                                        <textInputTraits key="textInputTraits" keyboardType="numberPad" secureTextEntry="YES"/>
+                                        <textInputTraits key="textInputTraits" autocorrectionType="no" secureTextEntry="YES"/>
                                         <userDefinedRuntimeAttributes>
                                             <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
                                                 <integer key="value" value="12"/>
@@ -167,7 +183,7 @@
                                         </userDefinedRuntimeAttributes>
                                     </textField>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Reg-Btn">
-                                        <rect key="frame" x="0.0" y="429" width="300" height="60"/>
+                                        <rect key="frame" x="0.0" y="378" width="300" height="60"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="60" id="h-reg-btn"/>
@@ -182,9 +198,12 @@
                                                 <integer key="value" value="16"/>
                                             </userDefinedRuntimeAttribute>
                                         </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <action selector="guardarTapped:" destination="fkk-NR-qn3" eventType="touchUpInside" id="XvS-jb-hNI"/>
+                                        </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Cancel-Btn">
-                                        <rect key="frame" x="0.0" y="509" width="300" height="60"/>
+                                        <rect key="frame" x="0.0" y="458" width="300" height="60"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="60" id="h-cancel-btn"/>
                                         </constraints>
@@ -193,6 +212,7 @@
                                             <color key="baseForegroundColor" systemColor="systemGrayColor"/>
                                         </buttonConfiguration>
                                         <connections>
+                                            <action selector="cancelarTapped:" destination="fkk-NR-qn3" eventType="touchUpInside" id="3BA-Fi-xGz"/>
                                             <segue destination="rT8-8x-s0G" kind="unwind" unwindAction="regresarAlLogin:" id="1NZ-K4-7wB"/>
                                         </connections>
                                     </button>
@@ -209,6 +229,12 @@
                             <constraint firstItem="Reg-Stack" firstAttribute="centerY" secondItem="c5u-4m-sHk" secondAttribute="centerY" id="cen-reg-y"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="guardarButton" destination="Reg-Btn" id="J17-zu-WtS"/>
+                        <outlet property="idDeviceTextField" destination="Reg-User" id="sNq-PS-Njm"/>
+                        <outlet property="passwordTextField" destination="Reg-Pass" id="SMv-W5-2MY"/>
+                        <outlet property="userTextField" destination="d7l-ho-YAL" id="k5S-G1-5Py"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Wvt-fe-Uyr" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <exit id="rT8-8x-s0G" userLabel="Exit" sceneMemberID="exit"/>
@@ -217,7 +243,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="letras_logo" width="1252" height="199"/>
+        <image name="letras_logo" width="415" height="68"/>
         <systemColor name="opaqueSeparatorColor">
             <color red="0.77647058823529413" green="0.77647058823529413" blue="0.78431372549019607" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>

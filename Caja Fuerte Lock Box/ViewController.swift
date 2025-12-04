@@ -2,8 +2,6 @@ import UIKit
 import UserNotifications
 
 // MARK: - 1. ESTRUCTURAS DE DATOS (MODELOS)
-// EXPLICACION: Estas estructuras mapean el JSON que llega de la API a objetos de Swift.
-
 struct UltimoEstadoResponse: Codable {
     let id_bloque: String
     let hora_lectura: String
@@ -26,7 +24,7 @@ struct EventoHistorial: Codable {
     let timestamp: Int64?
 }
 
-// MARK: - 2. CLASE PRINCIPAL
+// MARK: - 2. CLASE PRINCIPAL (ACTUALIZADA)
 class ViewController: UIViewController, UNUserNotificationCenterDelegate {
 
     // MARK: - IBOUTLETS (Conexiones con la interfaz gráfica)
@@ -42,57 +40,54 @@ class ViewController: UIViewController, UNUserNotificationCenterDelegate {
     // MARK: - VARIABLES DE ESTADO
     var isLocked = true
     let baseUrl = "https://api-sensores-348016469746.us-central1.run.app"
+    private var pollingTimer: Timer?
+    private var cornerLogoutButton: UIButton?
     
-    // EXPLICACION: Umbrales de Histeresis para evitar lecturas falsas y spam.
-    // Se definen limites altos para activar la alarma y bajos para desactivarla.
     let LIMITE_DISTANCIA = 15.0
     let LIMITE_TEMP_ALTA = 30.0
-    let LIMITE_TEMP_BAJA = 28.0 // Temperatura debe bajar hasta aqui para resetear la alerta
+    let LIMITE_TEMP_BAJA = 28.0
     let LIMITE_HUM_ALTA = 80.0
-    let LIMITE_HUM_BAJA = 75.0 // Humedad debe bajar hasta aqui para resetear la alerta
+    let LIMITE_HUM_BAJA = 75.0
     
-    // Banderas de estado para controlar el flujo de notificaciones locales
     var yaNotifiqueRobo = false
     var yaNotifiqueAlarma = false
     var yaNotifiqueTemp = false
     var yaNotifiqueHum = false
     
-    // MARK: - LIFECYCLE (Ciclo de vida de la pantalla)
+    // MARK: - LIFECYCLE
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Configurar delegado para permitir notificaciones aun con la app abierta
         UNUserNotificationCenter.current().delegate = self
         
         setupDesign()
         solicitarPermisosNotificacion()
         
-        print("SISTEMA INICIADO: Vista cargada correctamente")
-        
-        // Primera carga de datos
         fetchUltimoEstado()
         
-        // EXPLICACION: Timer que consulta la API cada 3 segundos (Polling)
-        Timer.scheduledTimer(withTimeInterval: 3.0, repeats: true) { [weak self] _ in
+        pollingTimer = Timer.scheduledTimer(withTimeInterval: 3.0, repeats: true) { [weak self] _ in
             self?.fetchUltimoEstado()
         }
         
         configurarGestos()
+        setupCornerLogoutButton()
     }
     
-    // Metodo para manejar notificaciones en primer plano (Foreground)
+    deinit {
+        pollingTimer?.invalidate()
+    }
+    
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         completionHandler([.banner, .list, .sound])
     }
     
     func setupDesign() {
-        view.backgroundColor = UIColor(red: 0.11, green: 0.11, blue: 0.12, alpha: 1.0) // Fondo oscuro profesional
+        view.backgroundColor = UIColor(red: 0.11, green: 0.11, blue: 0.12, alpha: 1.0)
         actualizarBotonVisualmente()
         statusLabel.text = "Ver registro de actividad"
     }
     
     func configurarGestos() {
-        // Ocultar teclado al tocar fuera de los campos de texto
         let tapView = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         view.addGestureRecognizer(tapView)
     }
@@ -107,7 +102,6 @@ class ViewController: UIViewController, UNUserNotificationCenterDelegate {
     @objc func dismissKeyboard() { view.endEditing(true) }
 
     // MARK: - CONSUMIR API (Networking)
-    
     func fetchUltimoEstado() {
         guard let url = URL(string: "\(baseUrl)/api/ultimo-estado") else { return }
 
@@ -116,8 +110,6 @@ class ViewController: UIViewController, UNUserNotificationCenterDelegate {
             do {
                 let decoder = JSONDecoder()
                 let respuesta = try decoder.decode(UltimoEstadoResponse.self, from: data)
-                
-                // EXPLICACION: Las actualizaciones de UI deben hacerse en el hilo principal
                 DispatchQueue.main.async {
                     self?.actualizarInterfaz(con: respuesta.datos)
                 }
@@ -127,41 +119,27 @@ class ViewController: UIViewController, UNUserNotificationCenterDelegate {
     }
     
     // MARK: - LÓGICA DE INTERFAZ Y ALERTAS
-    
     func actualizarInterfaz(con d: DatosSensores) {
         self.isLocked = !d.puerta_abierta
         actualizarBotonVisualmente()
         
-        // 1. Actualizacion de etiquetas de TEMPERATURA
         tempLabel.text = String(format: "%.1f C", d.temperatura)
-        if d.temperatura >= LIMITE_TEMP_ALTA {
-            tempLabel.textColor = .systemRed
-        } else {
-            tempLabel.textColor = .white
-        }
+        tempLabel.textColor = d.temperatura >= LIMITE_TEMP_ALTA ? .systemRed : .white
         
-        // 2. Actualizacion de etiquetas de HUMEDAD
         humLabel.text = "\(Int(d.humedad))%"
-        if d.humedad > LIMITE_HUM_ALTA {
-            humLabel.textColor = .systemBlue
-        } else {
-            humLabel.textColor = .white
-        }
+        humLabel.textColor = d.humedad > LIMITE_HUM_ALTA ? .systemBlue : .white
         
-        // 3. Actualizacion de DISTANCIA y Estado del Objeto
         distanceLabel.text = "\(Int(d.distancia)) cm"
         
-        // EXPLICACION: Validacion de presencia. Debe ser > 1.0 para descartar errores de lectura (0.0)
         if d.distancia > 1.0 && d.distancia < LIMITE_DISTANCIA {
             proximityLabel.text = "OBJETO SEGURO"
             proximityLabel.textColor = .systemGreen
-            yaNotifiqueRobo = false // Se resetea la bandera si el objeto regresa
+            yaNotifiqueRobo = false
         } else {
             proximityLabel.text = "SIN OBJETO / RETIRADO"
             proximityLabel.textColor = .systemRed
         }
         
-        // 4. Estado de VIBRACION
         if d.vibracion {
             vibrationLabel.text = "ALERTA"
             vibrationLabel.textColor = .systemRed
@@ -170,14 +148,10 @@ class ViewController: UIViewController, UNUserNotificationCenterDelegate {
             vibrationLabel.textColor = .systemGreen
         }
         
-        // Llamada a la logica de notificaciones push
         gestionarNotificaciones(d)
     }
     
     func gestionarNotificaciones(_ datos: DatosSensores) {
-        
-        // CASO A: ROBO DETECTADO
-        // Se activa si la distancia supera el limite o es 0 (lectura vacia/error critico)
         let esRobo = datos.distancia >= LIMITE_DISTANCIA || datos.distancia == 0
         if esRobo {
             if !yaNotifiqueRobo {
@@ -185,37 +159,29 @@ class ViewController: UIViewController, UNUserNotificationCenterDelegate {
                 yaNotifiqueRobo = true
             }
         }
-        
-        // CASO B: ALARMA FISICA ACTIVADA
         if datos.alarma_activa {
             if !yaNotifiqueAlarma {
                 enviarNotificacionLocal(titulo: "ALERTA: ALARMA SONANDO", cuerpo: "Se ha activado la sirena de seguridad.")
                 yaNotifiqueAlarma = true
             }
-        } else {
-            yaNotifiqueAlarma = false
-        }
+        } else { yaNotifiqueAlarma = false }
         
-        // CASO C: TEMPERATURA (Con Histeresis)
-        // Solo notifica si sube de 30. Solo resetea si baja de 28.
         if datos.temperatura >= LIMITE_TEMP_ALTA {
             if !yaNotifiqueTemp {
                 enviarNotificacionLocal(titulo: "ALERTA: TEMPERATURA CRITICA", cuerpo: "La temperatura subio a \(datos.temperatura) C. Riesgo para el contenido.")
                 yaNotifiqueTemp = true
             }
         } else if datos.temperatura < LIMITE_TEMP_BAJA {
-            yaNotifiqueTemp = false // Resetear bandera
+            yaNotifiqueTemp = false
         }
         
-        // CASO D: HUMEDAD (Con Histeresis)
-        // Solo notifica si sube de 80. Solo resetea si baja de 75.
         if datos.humedad > LIMITE_HUM_ALTA {
             if !yaNotifiqueHum {
                 enviarNotificacionLocal(titulo: "ALERTA: HUMEDAD CRITICA", cuerpo: "Humedad critica del \(Int(datos.humedad))%. Riesgo de daño.")
                 yaNotifiqueHum = true
             }
         } else if datos.humedad < LIMITE_HUM_BAJA {
-            yaNotifiqueHum = false // Resetear bandera
+            yaNotifiqueHum = false
         }
     }
     
@@ -224,13 +190,11 @@ class ViewController: UIViewController, UNUserNotificationCenterDelegate {
         content.title = titulo
         content.body = cuerpo
         content.sound = UNNotificationSound.defaultCritical
-        
         let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: nil)
         UNUserNotificationCenter.current().add(request)
     }
 
     // MARK: - COMANDOS A LA API
-    
     func enviarComandoServo(accion: String) {
         guard let url = URL(string: "\(baseUrl)/api/control-servo") else { return }
         var request = URLRequest(url: url)
@@ -257,7 +221,6 @@ class ViewController: UIViewController, UNUserNotificationCenterDelegate {
     }
     
     // MARK: - ACTIONS (Botones)
-    
     @IBAction func abrirHistorialTapped(_ sender: UIButton) {
         let storyboard = UIStoryboard(name: "HistorialStoryBoard", bundle: nil)
         if let historialVC = storyboard.instantiateViewController(withIdentifier: "HistorialViewController") as? HistorialViewController {
@@ -275,7 +238,6 @@ class ViewController: UIViewController, UNUserNotificationCenterDelegate {
     }
     
     @IBAction func changePasswordTapped(_ sender: UIButton) {
-        // EXPLICACION: Validacion local antes de enviar a la red
         guard let nuevaClave = passwordTextField.text, nuevaClave.count == 4 else {
             mostrarAlerta(titulo: "Error de Formato", mensaje: "La contraseña debe tener exactamente 4 digitos.")
             return
@@ -284,17 +246,69 @@ class ViewController: UIViewController, UNUserNotificationCenterDelegate {
         passwordTextField.text = ""; dismissKeyboard()
     }
     
+    // MARK: - LOGOUT (mejorado y dinámico)
     @IBAction func logoutTapped(_ sender: UIButton) {
         let alert = UIAlertController(title: "Cerrar Sesion", message: nil, preferredStyle: .actionSheet)
-        alert.addAction(UIAlertAction(title: "Salir", style: .destructive, handler: { _ in
-            let storyboard = UIStoryboard(name: "LoginStoryBoard", bundle: nil)
-            if let loginVC = storyboard.instantiateInitialViewController() {
-                loginVC.modalPresentationStyle = .fullScreen
-                self.present(loginVC, animated: true)
-            }
+        alert.addAction(UIAlertAction(title: "Salir", style: .destructive, handler: { [weak self] _ in
+            self?.performLogout()
         }))
         alert.addAction(UIAlertAction(title: "Cancelar", style: .cancel))
+        if let popover = alert.popoverPresentationController {
+            popover.sourceView = sender
+            popover.sourceRect = sender.bounds
+        }
         present(alert, animated: true)
+    }
+    
+    func performLogout() {
+        pollingTimer?.invalidate()
+        pollingTimer = nil
+        
+        yaNotifiqueAlarma = false
+        yaNotifiqueHum = false
+        yaNotifiqueRobo = false
+        yaNotifiqueTemp = false
+        
+        let keysToRemove = ["auth_token", "last_user", "last_device"]
+        let ud = UserDefaults.standard
+        keysToRemove.forEach { ud.removeObject(forKey: $0) }
+        ud.synchronize()
+        
+        // Intentar reemplazar rootViewController (iOS 13+)
+        if #available(iOS 13.0, *) {
+            if let scene = view.window?.windowScene {
+                for window in scene.windows where window.isKeyWindow {
+                    let storyboard = UIStoryboard(name: "LoginStoryBoard", bundle: nil)
+                    if let loginRoot = storyboard.instantiateInitialViewController() {
+                        window.rootViewController = loginRoot
+                        UIView.transition(with: window, duration: 0.35, options: [.transitionFlipFromLeft], animations: nil)
+                        return
+                    }
+                }
+            }
+        }
+        
+        // Fallback: presentar el login modally (si no pudimos cambiar root)
+        let storyboard = UIStoryboard(name: "LoginStoryBoard", bundle: nil)
+        if let loginVC = storyboard.instantiateInitialViewController() {
+            loginVC.modalPresentationStyle = .fullScreen
+            present(loginVC, animated: true)
+            return
+        }
+        
+        // Último recurso: instanciar desde "Main" usando instantiateViewController:
+        // instantiateViewController(withIdentifier:) ya devuelve UIViewController, así que no necesitamos castear a UIViewController (cast redundante).
+        // Opción A (recomendada si la escena tiene Storyboard ID "LoginViewController"):
+        let mainStoryboard = UIStoryboard(name: "Main", bundle: nil)
+        let loginVC = mainStoryboard.instantiateViewController(withIdentifier: "LoginViewController")
+        loginVC.modalPresentationStyle = .fullScreen
+        present(loginVC, animated: true)
+        
+        // Opción B (si prefieres castear a la clase específica):
+        // if let loginVC = mainStoryboard.instantiateViewController(withIdentifier: "LoginViewController") as? LoginViewController {
+        //     loginVC.modalPresentationStyle = .fullScreen
+        //     present(loginVC, animated: true)
+        // }
     }
     
     func mostrarAlerta(titulo: String, mensaje: String) {
@@ -315,7 +329,6 @@ class ViewController: UIViewController, UNUserNotificationCenterDelegate {
             config.baseForegroundColor = color
             lockButton.configuration = config
         } else {
-            // Fallback para versiones antiguas de iOS
             lockButton.setTitle(texto, for: .normal)
             lockButton.setImage(UIImage(systemName: imagenNombre), for: .normal)
             lockButton.tintColor = color
@@ -323,5 +336,46 @@ class ViewController: UIViewController, UNUserNotificationCenterDelegate {
         lockButton.layer.borderColor = color.cgColor
         lockButton.layer.borderWidth = 1.0
         lockButton.layer.cornerRadius = 10
+    }
+    
+    // MARK: - BOTÓN DE LOGOUT EN ESQUINA (RESPONSIVO)
+    private func setupCornerLogoutButton() {
+        if cornerLogoutButton != nil { return }
+        
+        let btn = UIButton(type: .system)
+        btn.translatesAutoresizingMaskIntoConstraints = false
+        let config = UIImage.SymbolConfiguration(pointSize: 18, weight: .semibold)
+        btn.setImage(UIImage(systemName: "power", withConfiguration: config), for: .normal)
+        btn.tintColor = .white
+        btn.backgroundColor = UIColor(white: 0.12, alpha: 0.6)
+        btn.layer.cornerRadius = 18
+        btn.layer.masksToBounds = true
+        btn.accessibilityLabel = "Cerrar sesión"
+        btn.addTarget(self, action: #selector(cornerLogoutTapped(_:)), for: .touchUpInside)
+        
+        view.addSubview(btn)
+        cornerLogoutButton = btn
+        
+        NSLayoutConstraint.activate([
+            btn.widthAnchor.constraint(equalToConstant: 36),
+            btn.heightAnchor.constraint(equalToConstant: 36),
+            btn.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 12),
+            btn.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 12)
+        ])
+        
+        btn.layer.shadowColor = UIColor.black.cgColor
+        btn.layer.shadowOpacity = 0.25
+        btn.layer.shadowOffset = CGSize(width: 0, height: 2)
+        btn.layer.shadowRadius = 4
+    }
+    
+    @objc private func cornerLogoutTapped(_ sender: UIButton) {
+        let alert = UIAlertController(title: "Cerrar sesión", message: "¿Deseas cerrar sesión y volver al login?", preferredStyle: .actionSheet)
+        alert.addAction(UIAlertAction(title: "Cerrar sesión", style: .destructive, handler: { [weak self] _ in
+            self?.performLogout()
+        }))
+        alert.addAction(UIAlertAction(title: "Cancelar", style: .cancel))
+        if let pop = alert.popoverPresentationController { pop.sourceView = sender; pop.sourceRect = sender.bounds }
+        present(alert, animated: true)
     }
 }
